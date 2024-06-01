@@ -9,7 +9,7 @@ export const fontSans = FontSans({
     variable: "--font-sans",
 })
 export const metadata = {
-    title: 'Create Next App',
+    title: 'PomoWeb',
     description: 'PomoWeb',
 }
 
