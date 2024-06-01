@@ -18,6 +18,11 @@ const Pomodoro = ({
     const globalColor = useGlobalColor((state) => state.globalColor)
     const [lengthChoosed, setLengthChoosed] = useState(0)
     const sequence = useSequence((state) => state.sequence)
+
+    useEffect(() => {
+        console.log("sequence: ", sequence)
+    }, [sequence])
+
     const pomodoroCustomSequence = [
         focusLength, shortBreakLength,
         focusLength, shortBreakLength,
@@ -39,10 +44,6 @@ const Pomodoro = ({
 
     // const initTime = pomodoroSequence[lengthChoosed].value
     // const [nextTime, setNextTime] = useState(pomodoroSequence[(lengthChoosed + 1) % pomodoroSequence.length].value)
-
-    useEffect(() => {
-        console.log(pomodoroCustomSequence[lengthChoosed], initTime)
-    }, [initTime])
 
     const nextSequence = (paused = true) => {
         if (paused) {
@@ -119,7 +120,15 @@ const Pomodoro = ({
 
     return (
         <>
-            <p className="text-xl md:text-2xl font-semibold text-center">{pomodoroCustomSequence[lengthChoosed].label}</p>
+            <p className="text-xl md:text-2xl font-semibold text-center">
+                {
+                    sequence ? (
+                        pomodoroCustomSequence[lengthChoosed].label
+                    ) : (
+                        pomodoroSequence[lengthChoosed].label
+                    )
+                }
+            </p>
             <AnimatePresence mode="wait">
                 <motion.div
                     key={lengthChoosed}
@@ -130,9 +139,6 @@ const Pomodoro = ({
                     transition={{duration: 0.5}}
                 >
                     <h1>{formatTime(time[0])}</h1>
-                    {/*<div className="mb-4">*/}
-                    {/*    <h1>:</h1>*/}
-                    {/*</div>*/}
                     <h1>{formatTime(time[1])}</h1>
                 </motion.div>
             </AnimatePresence>
@@ -157,23 +163,48 @@ const Pomodoro = ({
                     {/*    `}>*/}
                     {/*    </div>*/}
                     {/*</div>*/}
-                    <div
-                        className={`md:w-40 w-28 h-10 rounded-3xl bg-white absolute -z-10 transition-all ${pomodoroCustomSequence[lengthChoosed].label === "Focus Length" && 'top-0 left-5'} ${pomodoroCustomSequence[lengthChoosed].label === "Short Break Length" && 'md:top-20 md:left-5 centered-element'} ${pomodoroCustomSequence[lengthChoosed].label === "Long Break Length" && 'md:top-40 md:left-5 top-0 right-5'}`}>
-                    </div>
+                    {
+                        sequence ? (
+                            <div
+                                className={`md:w-40 w-28 h-10 rounded-3xl bg-white absolute -z-10 transition-all ${pomodoroCustomSequence[lengthChoosed].label === "Focus Length" && 'top-0 left-5'} ${pomodoroCustomSequence[lengthChoosed].label === "Short Break Length" && 'md:top-20 md:left-5 centered-element'} ${pomodoroCustomSequence[lengthChoosed].label === "Long Break Length" && 'md:top-40 md:left-5 top-0 right-5'}`}>
+                            </div>
+                        ) : (
+                            <div
+                                className={`md:w-40 w-28 h-10 rounded-3xl bg-white absolute -z-10 transition-all ${pomodoroSequence[lengthChoosed].label === "Focus Length" && 'top-0 left-5'} ${pomodoroSequence[lengthChoosed].label === "Short Break Length" && 'md:top-20 md:left-5 centered-element'} ${pomodoroSequence[lengthChoosed].label === "Long Break Length" && 'md:top-40 md:left-5 top-0 right-5'}`}>
+                            </div>
+                        )}
 
                     {/*<div className={`w-40 h-10 rounded-3xl bg-white absolute top-0 left-5`}>*/}
 
                     {/*</div>*/}
 
-                    <button onClick={() => setLengthChoosed(0)}
-                            className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Focus Length" ? 'bg-transparent text-black' : 'text-white'}`}>Focus
-                    </button>
-                    <button onClick={() => setLengthChoosed(1)}
-                            className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Short Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Short
-                    </button>
-                    <button onClick={() => setLengthChoosed(2)}
-                            className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Long Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Long
-                    </button>
+                    {
+                        sequence ? (
+                            <>
+                                <button onClick={() => setLengthChoosed(0)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Focus Length" ? 'bg-transparent text-black' : 'text-white'}`}>Focus
+                                </button>
+                                <button onClick={() => setLengthChoosed(1)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Short Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Short
+                                </button>
+                                <button onClick={() => setLengthChoosed(2)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroCustomSequence[lengthChoosed].label === "Long Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Long
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button onClick={() => setLengthChoosed(0)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroSequence[lengthChoosed].label === "Focus Length" ? 'bg-transparent text-black' : 'text-white'}`}>Focus
+                                </button>
+                                <button onClick={() => setLengthChoosed(1)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroSequence[lengthChoosed].label === "Short Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Short
+                                </button>
+                                <button onClick={() => setLengthChoosed(2)}
+                                        className={`md:w-40 w-28 py-2 rounded-3xl font-semibold ${pomodoroSequence[lengthChoosed].label === "Long Break Length" ? 'bg-transparent text-black' : 'text-white'}`}>Long
+                                </button>
+                            </>
+                        )
+                    }
                 </div>
             </div>
 

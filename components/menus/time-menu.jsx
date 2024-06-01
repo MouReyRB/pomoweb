@@ -95,7 +95,7 @@ const TimeMenu = ({
 
     return (
         <div
-            className="transition-all fixed flex-col top-10 right-0 w-full md:w-1/3 bg-secondary rounded-l-lg p-5 text-slate-700">
+            className="transition-all fixed flex-col top-10 right-0 w-full md:w-1/2 bg-secondary rounded-l-lg p-5 text-slate-700">
             <div className="space-y-5 relative w-full">
                 <div className="flex justify-between items-center">
                     <Icon icon="material-symbols-light:alarm-rounded" className="text-2xl"/>
