@@ -183,7 +183,7 @@ const Home = () => {
             </div>
             <div className="text-white text-lg font-bold p-10 w-full grid gap-10 md:grid-cols-2"
                 style={{ backgroundColor: `#${globalColor}` }}>
-                <div className="space-y-10 text-white text-lg font-bold p-10 w-full bg-white rounded-lg shadow m-4 dark:bg-gray-800">
+                <div className="space-y-10 text-white text-lg font-bold p-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800">
                     <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
                         <h1 className="text-3xl">What is pomodoro?</h1>
                         <p style={{ textAlign: 'justify' }}>This time management solution was developed by a college student named Francesco Cirillo in
