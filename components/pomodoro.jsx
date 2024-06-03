@@ -118,6 +118,8 @@ const Pomodoro = ({
 
     const formatTime = (value) => String(value).padStart(2, '0');
 
+    
+
     return (
         <>
             <p className="text-xl md:text-2xl font-semibold text-center">
@@ -236,6 +238,7 @@ const Pomodoro = ({
                 {/*    />*/}
                 {/*</div>*/}
             </div>
+            
         </>
     )
 }

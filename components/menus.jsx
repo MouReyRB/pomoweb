@@ -14,13 +14,15 @@ const Menus = ({
   setLongBreakLength,
 }) => {
   const [modal, setModal] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [isTop, setIsTop] = useState(true); // State untuk menentukan apakah pengguna berada di bagian atas halaman
+  const [isTop, setIsTop] = useState(true);
   const globalColor = useGlobalColor((state) => state.globalColor);
 
   useEffect(() => {
+    let scrollTimeout;
+
     const handleScroll = () => {
-      let scrollTimeout; // Deklarasi scrollTimeout di sini
       if (!isScrolling) {
         setIsScrolling(true);
       }
@@ -29,7 +31,6 @@ const Menus = ({
         setIsScrolling(false);
       }, 200);
 
-      // Cek apakah pengguna berada di bagian atas halaman
       if (window.scrollY === 0) {
         setIsTop(true);
       } else {
@@ -41,8 +42,19 @@ const Menus = ({
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
     };
   }, [isScrolling]);
+
+  const handleSetModal = (label) => {
+    if (label) {
+      setModal(label);
+      setTimeout(() => setIsModalVisible(true), 0); // Menunda perubahan isModalVisible
+    } else {
+      setIsModalVisible(false);
+      setTimeout(() => setModal(null), 500); // Menunggu animasi selesai sebelum mengubah modal
+    }
+  };
 
   const menuItems = [
     {
@@ -56,33 +68,32 @@ const Menus = ({
           setFocusLength={setFocusLength}
           setShortBreakLength={setShortBreakLength}
           setLongBreakLength={setLongBreakLength}
-          setModal={setModal}
+          setModal={handleSetModal}
         />
       ),
     },
     {
       icon: 'material-symbols-light:music-note-rounded',
       label: 'Music',
-      modal: <MusicMenu setModal={setModal} />,
+      modal: <MusicMenu setModal={handleSetModal} />,
     },
     {
       icon: 'material-symbols-light:image-rounded',
       label: 'Background',
-      modal: <BackgroundMenu setModal={setModal} />,
+      modal: <BackgroundMenu setModal={handleSetModal} />,
     },
   ];
 
   return (
     <div
-      className={`fixed top-10 right-0 w-full justify-center md:w-fit md:justify-end md:right-10 grid grid-cols-3 md:gap-3 ${
-        isScrolling || !isTop ? 'hidden' : 'block'
+      className={`fixed top-10 right-0 w-full justify-center md:w-fit md:justify-end md:right-10 grid grid-cols-3 md:gap-3 transition-opacity duration-500 ${
+        isScrolling || !isTop ? 'opacity-0 animate-fadeOut' : 'opacity-100 animate-fadeIn'
       }`}
     >
       {menuItems.map((item, index) => (
-        <>
+        <div key={index} className="relative">
           <div
-            key={index}
-            onClick={() => setModal(item.label)}
+            onClick={() => handleSetModal(item.label)}
             className="flex flex-col items-center font-semibold gap-1 hover:text-slate-700 cursor-pointer"
           >
             <div className="p-2 rounded-lg bg-secondary">
@@ -94,8 +105,12 @@ const Menus = ({
             </div>
             <p>{item.label}</p>
           </div>
-          {modal === item.label && item.modal}
-        </>
+          {modal === item.label && (
+            <div className={`absolute top-0 right-0 z-50 transition-opacity duration-500 ${isModalVisible ? 'opacity-100' : 'opacity-0'}`}>
+              {item.modal}
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );

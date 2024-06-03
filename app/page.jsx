@@ -54,7 +54,7 @@ const Home = () => {
 
     // To Do List
     const [tasks, setTasks] = useState([
-        "Study HTML", "Study CSS"
+        "Study HTML"
     ]);
     const [newTask, setNewTask] = useState("");
 
@@ -125,19 +125,16 @@ const Home = () => {
             </div>
             <div className="text-white text-lg font-bold p-10 w-full"
                 style={{ backgroundColor: `#${globalColor}` }} >
-                <h1 className="text-center text-3xl font-semibold mb-4">
-                    To Do List
-                </h1>
-                <div className="md:w-1/2 mx-auto text-gray-500 dark:text-gray-400">
-                    <div className="bg-white shadow-md rounded-lg p-6">
+                <div className="md:w-1/3 mx-auto text-gray-500 dark:text-gray-400 text-sm sm:text-lg">
+                    <div className="bg-white shadow-md rounded-lg p-4">
                         <form onSubmit={handleAddTask}>
-                            <div className="flex mb-4">
+                            <div className="flex">
                                 <input
                                     type="text"
-                                    className="w-full px-4 py-2 mr-2 rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
+                                    className="w-full px-4 py-2 mr-2  rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
                                     value={newTask}
                                     onChange={(e) => setNewTask(e.target.value)}
-                                    placeholder="Add new task"
+                                    placeholder="Add your To Do List"
                                     required
                                 />
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -161,16 +158,18 @@ const Home = () => {
                                         />
                                         <span>{task}</span>
                                     </label>
-                                    <div>
-                                        <button
+                                    <div >
+                                        <button 
                                             className="text-red-500 hover:text-red-700 mr-2"
                                             onClick={() => handleDeleteTask(index)}
+                                            style={{ color: `#${globalColor}` }}
                                         >
                                             Delete
                                         </button>
                                         <button
                                             className="text-blue-500 hover:text-blue-700"
                                             onClick={() => handleEditTask(index)}
+                                            style={{ color: `#${globalColor}` }}
                                         >
                                             Edit
                                         </button>
@@ -183,7 +182,7 @@ const Home = () => {
             </div>
             <div className="text-white text-lg font-bold p-10 w-full grid gap-10 md:grid-cols-2"
                 style={{ backgroundColor: `#${globalColor}` }}>
-                <div className="space-y-10 text-white text-lg font-bold p-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800">
+                <div className="space-y-10 text-white text-lg font-bold p-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800 mx-auto ">
                     <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
                         <h1 className="text-3xl">What is pomodoro?</h1>
                         <p style={{ textAlign: 'justify' }}>This time management solution was developed by a college student named Francesco Cirillo in
@@ -204,7 +203,7 @@ const Home = () => {
                             offers several features that can assist you.</p>
                     </div>
                 </div>
-                <div className="space-y-10 flex flex-col justify-center text-white text-lg font-bold p-10 w-full">
+                <div className="space-y-10 text-sm flex flex-col justify-center text-white text-lg font-bold p-10 w-full">
                     <div className="flex gap-5">
                         <div className="p-2 rounded-lg bg-secondary aspect-square w-min h-min">
                             <Icon
