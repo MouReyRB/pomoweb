@@ -184,21 +184,21 @@ const Home = () => {
                 style={{ backgroundColor: `#${globalColor}` }}>
                 <div className="space-y-10 text-white text-lg font-bold p-10 bg-white rounded-lg shadow m-4 dark:bg-gray-800 mx-auto ">
                     <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                        <h1 className="text-3xl">What is pomodoro?</h1>
+                        <h1 className="text-3xl">What is pomodoro ?</h1>
                         <p style={{ textAlign: 'justify' }}>This time management solution was developed by a college student named Francesco Cirillo in
                             the 1980s. Based on various time intervals set throughout the day, the name of this
                             technique comes from the Italian word for "tomato," referring to a tomato-shaped timer that
                             Cirillo himself used while perfecting his time management method.</p>
                     </div>
                     <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                        <h1 className="text-3xl">What is mypomoweb?</h1>
+                        <h1 className="text-3xl">What is pomoweb ?</h1>
                         <p style={{ textAlign: 'justify' }}>Mypomoweb is a Pomodoro website that you can use according to your preferences, as it allows
                             for customization. This website can be used on both desktop and mobile browsers. Its goal is
                             to help you stay more focused on your activities and assist you in managing your time
                             effectively.</p>
                     </div>
                     <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                        <h1 className="text-3xl">how to use mypomoweb ?</h1>
+                        <h1 className="text-3xl">how to use pomoweb ?</h1>
                         <p style={{ textAlign: 'justify' }}>You can use this website to help you implement the Pomodoro technique. This website also
                             offers several features that can assist you.</p>
                     </div>
