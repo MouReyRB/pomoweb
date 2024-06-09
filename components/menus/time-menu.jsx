@@ -76,22 +76,35 @@ const TimeMenu = ({
         }
     ]
 
-    const submit = () => {
-        setFocusLength({
-            label: recomendations[choosedRecomendation].value[0].label,
-            value: [localFocusLength[0], localFocusLength[1]]
-        })
+    const submit = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_AZURE_UPDATE_TIME_FUNCTION_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    focusLength: localFocusLength,
+                    shortBreakLength: localShortBreakLength,
+                    longBreakLength: localLongBreakLength,
+                    choosedRecomendation,
+                    recomendations
+                })
+            });
 
-        setShortBreakLength({
-            label: recomendations[choosedRecomendation].value[1].label,
-            value: [localShortBreakLength[0], localShortBreakLength[1]]
-        })
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-        setLongBreakLength({
-            label: recomendations[choosedRecomendation].value[2].label,
-            value: [localLongBreakLength[0], localLongBreakLength[1]]
-        })
-    }
+            const data = await response.json();
+
+            setFocusLength(data.updatedFocusLength);
+            setShortBreakLength(data.updatedShortBreakLength);
+            setLongBreakLength(data.updatedLongBreakLength);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    };
 
     return (
         <div
@@ -121,17 +134,6 @@ const TimeMenu = ({
                                         ]
                                     )}/>
                                 </div>
-                                {/*<div>*/}
-                                {/*    <p className="text-xs">Second</p>*/}
-                                {/*    <Input type="number" max="60" className="w-full md:w-24 border border-foreground"*/}
-                                {/*           placeholder={item.value[1]}*/}
-                                {/*           value={item.value[1]} onInput={(e) => item.set(*/}
-                                {/*        [*/}
-                                {/*            item.value[0],*/}
-                                {/*            e.target.value,*/}
-                                {/*        ]*/}
-                                {/*    )}/>*/}
-                                {/*</div>*/}
                             </div>
                         </div>
                     ))}

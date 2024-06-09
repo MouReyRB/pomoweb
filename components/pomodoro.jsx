@@ -42,36 +42,52 @@ const Pomodoro = ({
         focusLength, shortBreakLength, longBreakLength
     ]
 
-    // const initTime = pomodoroSequence[lengthChoosed].value
-    // const [nextTime, setNextTime] = useState(pomodoroSequence[(lengthChoosed + 1) % pomodoroSequence.length].value)
-
-    const nextSequence = (paused = true) => {
-        if (paused) {
-            setIsCounting(false)
-        }
-
-        // const nextIndex = (lengthChoosed + 1) % pomodoroSequence.length;
-        const nextIndex = (lengthChoosed + 1) % pomodoroCustomSequence.length;
-
-        if (nextIndex) {
-            setLengthChoosed(nextIndex);
-        } else {
-            setLengthChoosed(0);
-        }
+    const callNextSequence = async (lengthChoosed, pomodoroCustomSequence) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AZURE_NXT_SEQUENCE_FUNCTION_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                lengthChoosed,
+                pomodoroCustomSequence
+            })
+        });
+        const data = await response.json();
+        return data.nextIndex;
     };
 
-    const previousSequence = (paused = true) => {
+    const callPreviousSequence = async (lengthChoosed, pomodoroSequence) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AZURE_PREV_SEQUENCE_FUNCTION_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                lengthChoosed,
+                pomodoroSequence
+            })
+        });
+        const data = await response.json();
+        return data.previousIndex;
+    };
+
+    const nextSequence = async (paused = true) => {
         if (paused) {
-            setIsCounting(false)
+            setIsCounting(false);
         }
 
-        const previousIndex = (lengthChoosed - 1 + pomodoroSequence.length) % pomodoroSequence.length;
+        const nextIndex = await callNextSequence(lengthChoosed, pomodoroCustomSequence);
+        setLengthChoosed(nextIndex);
+    };
 
-        if (previousIndex) {
-            setLengthChoosed(previousIndex);
-        } else {
-            setLengthChoosed(0);
+    const previousSequence = async (paused = true) => {
+        if (paused) {
+            setIsCounting(false);
         }
+
+        const previousIndex = await callPreviousSequence(lengthChoosed, pomodoroSequence);
+        setLengthChoosed(previousIndex);
     };
 
     useEffect(() => {
@@ -95,7 +111,6 @@ const Pomodoro = ({
                             const audio = new Audio(ringMusic.url);
                             audio.play();
 
-                            // nextSequence(false);
                             if (sequence) {
                                 nextSequence(false)
                             } else {
@@ -117,8 +132,6 @@ const Pomodoro = ({
     }, [isCounting, lengthChoosed, time]);
 
     const formatTime = (value) => String(value).padStart(2, '0');
-
-    
 
     return (
         <>
@@ -148,23 +161,6 @@ const Pomodoro = ({
             <div
                 className="w-full md:w-min h-fit absolute left-0 bottom-0 md:bottom-1/3  md:px-20 z-10">
                 <div className="relative flex md:flex-col justify-between items-center gap-5 md:gap-10 px-5 my-5">
-                    {/*<div className={`grid w-full absolute top-0 right-0 -z-10 border`}>*/}
-                    {/*    /!*group*!/*/}
-                    {/*    /!*${lengthChoosed === 0 && 'left-5'}*!/*/}
-                    {/*    /!*${lengthChoosed === 1 && 'left-0 justify-center'}*!/*/}
-                    {/*    /!*${lengthChoosed === 2 && 'right-5 justify-end'}*!/*/}
-                    {/*    /!*<div*!/*/}
-                    {/*    /!*    className={`md:w-40 w-32 h-10 rounded-3xl bg-white absolute -z-10 transition-all ${lengthChoosed === 0 && 'md:top-0 md:left-5'} ${lengthChoosed === 1 && 'md:top-20 md:left-5 left-48'} ${lengthChoosed === 2 && 'md:top-40 md:left-5 right-5'}`}>*!/*/}
-                    {/*    /!*</div>*!/*/}
-
-                    {/*    <div*/}
-                    {/*        className={`md:w-40 w-32 h-10 rounded-3xl bg-white transition-all*/}
-                    {/*    ${lengthChoosed === 0 && 'left-5'}*/}
-                    {/*    ${lengthChoosed === 1 && 'left-0 justify-self-center'}*/}
-                    {/*    ${lengthChoosed === 2 && 'mr-5 justify-self-end'}*/}
-                    {/*    `}>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                     {
                         sequence ? (
                             <div
@@ -175,10 +171,6 @@ const Pomodoro = ({
                                 className={`md:w-40 w-28 h-10 rounded-3xl bg-white absolute -z-10 transition-all ${pomodoroSequence[lengthChoosed].label === "Focus Length" && 'top-0 left-5'} ${pomodoroSequence[lengthChoosed].label === "Short Break Length" && 'md:top-20 md:left-5 centered-element'} ${pomodoroSequence[lengthChoosed].label === "Long Break Length" && 'md:top-40 md:left-5 top-0 right-5'}`}>
                             </div>
                         )}
-
-                    {/*<div className={`w-40 h-10 rounded-3xl bg-white absolute top-0 left-5`}>*/}
-
-                    {/*</div>*/}
 
                     {
                         sequence ? (
@@ -211,15 +203,6 @@ const Pomodoro = ({
             </div>
 
             <div className="flex gap-5 items-center justify-between">
-                {/*<div*/}
-                {/*    className={`py-2 rounded-xl w-32 flex justify-center bg-white hover:bg-slate-300 cursor-pointer`}*/}
-                {/*    onClick={previousSequence}*/}
-                {/*>*/}
-                {/*    <Icon icon="material-symbols-light:arrow-circle-left-rounded"*/}
-                {/*          className={`text-3xl`}*/}
-                {/*          style={{color: `#${globalColor}`}}*/}
-                {/*    />*/}
-                {/*</div>*/}
                 <div
                     onClick={() => setIsCounting(!isCounting)}
                     className={`py-2 rounded-xl w-40 flex justify-center bg-white hover:bg-slate-300 cursor-pointer`}>
@@ -228,17 +211,7 @@ const Pomodoro = ({
                           style={{color: `#${globalColor}`}}
                     />
                 </div>
-                {/*<div*/}
-                {/*    className={`py-2 rounded-xl w-32 flex justify-center bg-white hover:bg-slate-300 cursor-pointer`}*/}
-                {/*    onClick={nextSequence}*/}
-                {/*>*/}
-                {/*    <Icon icon="material-symbols-light:arrow-circle-right-rounded"*/}
-                {/*          className={`text-3xl`}*/}
-                {/*          style={{color: `#${globalColor}`}}*/}
-                {/*    />*/}
-                {/*</div>*/}
             </div>
-            
         </>
     )
 }
